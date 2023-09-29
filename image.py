@@ -1,4 +1,6 @@
+from sampling import sampling
 class PGMImage:
+    sampling = sampling
     def __init__(self, width=0, height=0, maxval=255):
         self.width = width
         self.height = height
@@ -9,7 +11,6 @@ class PGMImage:
         with open(filename, 'rb') as f:
             # Read header
             header = f.readline().decode().strip()
-            print(header)
             if header != 'P5':
                 raise ValueError('Not a PGM file')
             # Skip comments
@@ -42,16 +43,3 @@ class PGMImage:
         self.pixels[y][x] = value
 
 
-
-image = PGMImage()
-image.read_from_file('aerial.pgm')
-
-
-
-# for y in range(image.height):
-#     for x in range(image.width):
-#         pixel_value = image.get_pixel(x, y)
-#         inverted_value = image.maxval - pixel_value
-#         image.set_pixel(x, y, inverted_value)
-
-image.write_to_file('output.pgm')

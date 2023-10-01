@@ -1,6 +1,10 @@
 from sampling import sampling
+from quantization import quantization
+
+
 class PGMImage:
     sampling = sampling
+    quantization = quantization
     def __init__(self, width=0, height=0, maxval=255):
         self.width = width
         self.height = height
@@ -34,7 +38,9 @@ class PGMImage:
             # Write data
             for row in self.pixels:
                 for pixel in row:
-                    f.write(int(pixel).to_bytes(1, 'big'))
+                    # Clamp the pixel value within the 0-255 range
+                    clamped_pixel = max(0, min(255, int(pixel)))
+                    f.write(clamped_pixel.to_bytes(1, 'big'))
 
     def get_pixel(self, x, y):
         return self.pixels[y][x]

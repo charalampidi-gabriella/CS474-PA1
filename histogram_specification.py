@@ -33,8 +33,8 @@ def write_to_file(filename,width,height,maxval,data):
                 clamped_pixel = max(0, min(255, int(pixel)))
                 f.write(clamped_pixel.to_bytes(1, 'big'))
 
-def histogram_specification(input_data, target_hist):
-    # Calculate the histogram of the input image
+def apply_histogram_specification(input_data, target_hist,max_val):
+      # Calculate the histogram of the input image
     hist, _ = np.histogram(input_data, bins=max_val + 1, range=(0, max_val))
 
     # Calculate the CDF of the input histogram
@@ -51,12 +51,10 @@ def histogram_specification(input_data, target_hist):
 
     return spec_data.astype(np.uint8)
 
+def histogram_specification(filename,target_file):
+    width, height, max_val, data = read_from_file(filename)
+    _width, _height, _max_val, target_data = read_from_file(target_file)
 
-filename = 'images/f_16.pgm'
-target_file = 'images/peppers.pgm'
-width, height, max_val, data = read_from_file(filename)
-_width, _height, _max_val, target_data = read_from_file(target_file)
-
-histo_data = histogram_specification(data,target_data)
-    
-write_to_file("specified_boat.pgm",width,height,max_val,histo_data)
+    histo_data = apply_histogram_specification(data,target_data,max_val)
+        
+    write_to_file(filename,width,height,max_val,histo_data)

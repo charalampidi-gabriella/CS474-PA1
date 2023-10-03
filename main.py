@@ -1,6 +1,6 @@
-from image import PGMImage
-from histogram_equalization import histogram_equalization
-from histogram_specification import histogram_specification
+from image import PGMImage  
+import histogram_equalization as h_e
+import histogram_specification as h_s
 
 def get_user_choice():
     print("Which function do you want to test?")
@@ -24,15 +24,16 @@ elif choice == "2":
     image.quantization()
     new_file_name = 'images/peppers_quantized.pgm'
 elif choice == "3":
-    image = input('Please input image to modify:\n')
-    histogram_equalization(image)
+    file = input("Please choose a file:\n")
+    h_e.histogram_equalization(file)
 elif choice == "4":
-    image = input('Please input image to modify:\n')
-    target = input('Please input target histogram image:\n')
+    file = input("Please choose a file:\n")
+    target = input("Please choose a target histogram file:\n:")
+    h_s.histogram_specification(file,target)
 else:
     print("Invalid choice.")
     exit()
 
-
-image.write_to_file(new_file_name)
-print(f"New image written to {new_file_name}")
+if(int(choice) < 3):
+    image.write_to_file(new_file_name)
+    print(f"New image written to {new_file_name}")

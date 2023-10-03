@@ -1,7 +1,6 @@
 import numpy as np
 
 
-
 def read_from_file(filename):
         with open(filename, 'rb') as f:
             # Read header
@@ -34,24 +33,30 @@ def write_to_file(filename,width,height,maxval,data):
                 clamped_pixel = max(0, min(255, int(pixel)))
                 f.write(clamped_pixel.to_bytes(1, 'big'))
 
-def apply_histogram_equalization(width, height, max_val, img_data):
-    # Calculate the histogram
-    hist, _ = np.histogram(img_data, bins=max_val + 1, range=(0, max_val))
+def histogram_specification(input_data, target_hist):
+    # Calculate the histogram of the input image
+    hist, _ = np.histogram(input_data, bins=max_val + 1, range=(0, max_val))
 
-    # Calculate the cumulative distribution function (CDF)
+    # Calculate the CDF of the input histogram
     cdf = hist.cumsum()
 
-    # Normalize the CDF to scale it to the full intensity range
-    cdf_normalized = (cdf - cdf.min()) * max_val / (cdf.max() - cdf.min())
+    # Calculate the histogram of the target histogram
+    target_hist, _ = np.histogram(target_hist, bins=max_val + 1, range=(0, max_val))
 
-    # Map the original pixel values to their corresponding values in the equalized image
-    equalized_img_data = cdf_normalized[img_data]
+    # Calculate the CDF of the target histogram
+    target_cdf = target_hist.cumsum()
 
-    return equalized_img_data.astype(np.uint8)
+    # Map the input pixel values to match the target CDF
+    spec_data = np.interp(cdf[input_data], target_cdf, np.arange(max_val + 1))
 
-def histogram_equalization(image):
-    width, height, max_val, data = read_from_file(image)
+    return spec_data.astype(np.uint8)
 
-    histo_data = apply_histogram_equalization(width,height,max_val,data)
-        
-    write_to_file(image + "equalized.pgm",width,height,max_val,histo_data)
+
+filename = 'images/f_16.pgm'
+target_file = 'images/peppers.pgm'
+width, height, max_val, data = read_from_file(filename)
+_width, _height, _max_val, target_data = read_from_file(target_file)
+
+histo_data = histogram_specification(data,target_data)
+    
+write_to_file("specified_boat.pgm",width,height,max_val,histo_data)

@@ -1,10 +1,12 @@
 from sampling import sampling
 from quantization import quantization
+from histogram_equalization import histogram_equalization
 
 
 class PGMImage:
     sampling = sampling
     quantization = quantization
+    histogram_equalization = histogram_equalization
     def __init__(self, width=0, height=0, maxval=255):
         self.width = width
         self.height = height

@@ -28,7 +28,7 @@ elif choice == "3":
     h_e.histogram_equalization(file)
 elif choice == "4":
     file = input("Please choose a file:\n")
-    target = input("Please choose a target histogram file:\n:")
+    target = input("Please choose a target histogram file:\n")
     h_s.histogram_specification(file,target)
 else:
     print("Invalid choice.")
